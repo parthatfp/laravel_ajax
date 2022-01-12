@@ -14,6 +14,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Phone</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Image</th>
                     <th scope="col">Action</th>
                   </tr>
@@ -22,6 +23,7 @@
                   
                   
                 </tbody>
+                <p class="pagiData"></p>
               </table>
         </div>
     </div>
@@ -119,11 +121,12 @@
     </div>
   </div>
 
+  
 @endsection
 
 @section('scripts')
     <script>
-         
+                                 
         $(document).ready(function () {
            
             $.ajaxSetup({
@@ -131,7 +134,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            
             fetchEmployee();
 
             function fetchEmployee(){
@@ -144,10 +147,16 @@
                         // console.log(response.employee);
                         $('tbody').html("");
                         $.each(response.employee, function (key, item) { 
+                            
+                            let status = "";
+                            if(item.status == 1){ status = '<span class="badge" style="background: #6b8b69;">Active</span>' }
+                            else{status = '<span class="badge" style="background: #000;">InActive</span>'}
+
                             $('tbody').append('<tr>\
                                 <th scope="row">'+`${++key}`+'</th>\
                                 <td>'+item.name+'</td>\
                                 <td>'+item.phone+'</td>\
+                                <td>'+status+'</td>\
                                 <td>\
                                     <img src="uploads/employee/'+item.image+'" style="height: 65px; width: 60px" alt="">\
                                 </td>\
@@ -156,12 +165,24 @@
                                     <button value="'+item.id+'" class="delete_btn btn btn-sm btn-success">Del</button>\
                                 </td>\
                             </tr>');
+                            
+                            $('.pagiData').append(
+
+                            );
                         });
 
                     }
                 });
             }
-
+            function getmark(type) {
+                var mark = '';
+                if (type == '1'){
+                    mark = 'Active'
+                } else if (type == '0'){
+                    mark = 'InActive'
+                }
+                return mark;
+            }
 
             $(document).on('click','.edit_btn', function (e) {
                 e.preventDefault();
@@ -192,7 +213,25 @@
 
             $(document).on('click','.delete_btn', function (e) {
                 e.preventDefault();
-                // alert('Are you sure to delete this Data?');
+                
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+
                 var del_id = $(this).val();
                 // alert(del_id);
                 // $('#editEmployee').modal('show');
@@ -202,7 +241,7 @@
                     url: "/delete-employee/"+del_id,
                     dataType: "json",
                     success: function (response) {
-                        
+                        toastr["success"](response.message);
                         fetchEmployee();
                     },
                     error:function (error){
@@ -215,6 +254,24 @@
 
             $(document).on('submit','#updateEmployeeForm', function (e) {
                 e.preventDefault();
+
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
 
                 var id = $('#edd_id').val();
                 console.log(id);
@@ -232,17 +289,19 @@
                     contentType: false,
                     success: function (response) {
 
+                        toastr["success"](response.message);
                         fetchEmployee();
                         // $('#updateEmployeeForm').find('input').val("");
                         $('#editEmployee').modal('hide');
 
                         // fetchEmployee();
-                        alert(response.message);
+                        // alert(response.message);
                         // location.reload();
                         
                         
                     },
                     error:function (error){
+                        toastr["success"](error);
                           console.log(error);  
                           
                     }
@@ -253,6 +312,25 @@
            
             $('#employeeSubmit').click(function(e) {
                 e.preventDefault();
+
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+
                 
                 let formData = new FormData();
                 formData.append('name', $('#name').val());
@@ -266,15 +344,15 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        // console.log(response);
-                        // $('#saveError').html("");
-                        // $('#saveError').removeClass('d-none');
+
+                        toastr["success"](response.message);
                         fetchEmployee();
                         $('#addEmployeeForm').find('input').val("");
                         $('#addEmployee').modal('hide');
 
                         // fetchEmployee();
-                        alert(response.message);
+                        // alert(response.message);
+                       
                         // location.reload();
                         
                         

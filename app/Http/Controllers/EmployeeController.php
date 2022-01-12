@@ -29,6 +29,7 @@ class EmployeeController extends Controller
             $employee = new Employee();
             $employee->name = $request->name;
             $employee->phone = $request->phone;
+            $employee->status = 1;
             
             if($request->hasFile('image')){
 
@@ -100,12 +101,13 @@ class EmployeeController extends Controller
                 $employee->save();
                 return response()->json([
                     'type' => 'success',
-                    'message' => 'Successsfully Employee Created !',
+                    'message' => 'Employee updated successfully !',
                 ]);
             } catch (\Exception $exception) {
                 return response()->json([
                     'type' => 'error',
-                    'message' => $exception->getMessage(),
+                    'message' => 'Employee not updated !',
+                    // 'message' => $exception->getMessage(),
                 ]);
             }
     }
