@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +25,12 @@ Route::post('/employee', [EmployeeController::class, 'store'])->name('employee.s
 Route::get('/edit-employee/{id}', [EmployeeController::class, 'editEmployee'])->name('employee.edit');
 Route::post('/update-employee/{id}', [EmployeeController::class, 'updateEmployee'])->name('employee.update');
 Route::delete('/delete-employee/{id}', [EmployeeController::class, 'deleteEmployee'])->name('employee.delete');
+
+Route::get('/product', [ProductController::class, 'index'])->name('allproductList');
+// Route::get('/fetch-amployee', [ProductController::class, 'fetchproduct'])->name('product.fetch');
+Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+Route::get('/edit-product/{id}', [ProductController::class, 'editproduct'])->name('product.edit');
+Route::post('/update-product/{id}', [ProductController::class, 'updateproduct'])->name('product.update');
+Route::delete('/delete-product/{id}', [ProductController::class, 'deleteproduct'])->name('product.delete');
+Route::post('/active-product/{id}', [ProductController::class, 'activeProduct'])->name('activeProduct');
+Route::post('/inactive-product/{id}', [ProductController::class, 'inactiveProduct'])->name('inactiveProduct');
