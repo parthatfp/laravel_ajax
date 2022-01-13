@@ -53,11 +53,62 @@
               </table>
               
               <div>
+                {{ $products->render("pagination::semantic-ui") }}
+
                 {{-- {!! $products->render() !!} --}}
-                {{-- <div class="d-flex justify-content-center">
-                    {!! $products->links() !!}
-                </div>
-              </div> --}}
+                {{-- {{ $products->render("pagination::bootstrap-4") }} --}}
+                {{ $products->render("pagination::simple-bootstrap-4") }}
+                @if ($products->lastPage() > 1)
+                    <ul class="pagination">
+                        <li class="{{ ($products->currentPage() == 1) ? ' disabled' : '' }}" style="padding: 5px 8px; border: 1px solid #bdbdbd;">
+                            <a href="{{ $products->url(1) }}" style="text-decoration: none;"><<</a>
+                        </li>
+                        @for ($i = 1; $i <= $products->lastPage(); $i++)
+                            <li class="{{ ($products->currentPage() == $i) ? ' active' : '' }}" style="padding: 5px 12px; border: 1px solid #bdbdbd;">
+                                <a href="{{ $products->url($i) }}" style="text-decoration: none;">{{ $i }}</a>
+                            </li>
+                        @endfor
+                        <li class="{{ ($products->currentPage() == $products->lastPage()) ? ' disabled' : '' }}" style="padding: 5px 8px; border: 1px solid #bdbdbd;">
+                            <a href="{{ $products->url($products->currentPage()+1) }}" style="text-decoration: none;" > >> </a>
+                        </li>
+                    </ul>
+                @endif
+                <?php
+                // config
+                $link_limit = 9; // maximum number of links (a little bit inaccurate, but will be ok for now)
+                ?>
+                
+                @if ($products->lastPage() > 1)
+                
+                    <ul class="pagination">
+                        <li class="{{ ($products->currentPage() == 1) ? ' disabled' : '' }}" style="padding: 5px 8px; border: 1px solid #bdbdbd;">
+                            <a href="{{ $products->url(1) }}" style="text-decoration: none;"> << </a>
+                        </li>
+                        @for ($i = 1; $i <= $products->lastPage(); $i++)
+                            <?php
+                            $half_total_links = floor($link_limit / 2);
+                            $from = $products->currentPage() - $half_total_links;
+                            $to = $products->currentPage() + $half_total_links;
+                            if ($products->currentPage() < $half_total_links) {
+                            $to += $half_total_links - $products->currentPage();
+                            }
+                            if ($products->lastPage() - $products->currentPage() < $half_total_links) {
+                                $from -= $half_total_links - ($products->lastPage() - $products->currentPage()) - 1;
+                            }
+                            ?>
+                            @if ($from < $i && $i < $to)
+                                <li class="{{ ($products->currentPage() == $i) ? ' active' : '' }}" style="padding: 5px 12px; border: 1px solid #bdbdbd;">
+                                    <a href="{{ $products->url($i) }}" style="text-decoration: none;">{{ $i }}</a>
+                                </li>
+                            @endif
+                        @endfor
+                        <li class="{{ ($products->currentPage() == $products->lastPage()) ? ' disabled' : '' }}" style="padding: 5px 8px; border: 1px solid #bdbdbd;">
+                            <a href="{{ $products->url($products->lastPage()) }}" style="text-decoration: none;"> >> </a>
+                        </li>
+                    </ul>
+                @endif
+
+ 
               
         </div>
     </div>

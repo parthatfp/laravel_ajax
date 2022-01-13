@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     public function index(){
-        $products = Product::paginate(100);
+        $products = Product::paginate(1);
         return view('products.index', compact('products'));
     }
 
